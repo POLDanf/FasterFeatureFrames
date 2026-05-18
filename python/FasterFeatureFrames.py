@@ -1,80 +1,49 @@
 import numpy as np
 
 # Import the compiled pybind11 module
-# try:
-#     import _fasterfeatureframes_core
-# except ImportError:
-#     raise ImportError("Could not import _fasterfeatureframes_core. Did you compile the C++ extension?")
+try:
+    import _fasterfeatureframes_core
+except ImportError:
+    raise ImportError("Could not import _fasterfeatureframes_core. Did you compile the C++ extension?")
 
 class DataFrame:
     """
     A pandas-like DataFrame backed by a fast C++ feature frame.
     """
     def __init__(self, data=None):
-        """
-        Initialize the DataFrame.
-        
-        TODO:
-        1. Create an instance of the C++ FasterFeatureFrames object.
-        2. If 'data' is provided (e.g., a dictionary where keys are column names 
-           and values are lists/arrays), iterate through it.
-        3. Convert each column's data to a 1D numpy array.
-        4. Add each column to the C++ frame using its add_column method.
-        """
-        pass
+        self._core = _fasterfeatureframes_core.FasterFeatureFrames()
+        if data is not None:
+            for col_name, col_data in data.items():
+                self[col_name] = col_data
 
     @property
     def columns(self):
-        """
-        Return the column names of the DataFrame.
-        
-        TODO:
-        1. Call the corresponding property/method on the C++ frame to get column names.
-        2. Return the result.
-        """
-        pass
+        return self._core.get_columns()
 
     @property
     def shape(self):
-        """
-        Return the dimensionality of the DataFrame (rows, columns).
-        
-        TODO:
-        1. Call the shape property/method on the C++ frame.
-        2. Return the tuple (rows, cols).
-        """
-        pass
+        return self._core.shape
 
     def __getitem__(self, key):
-        """
-        Overloads df['col_name'] or df[['col1', 'col2']]
-        
-        TODO:
-        1. Check if 'key' is a string. If so, return that single column from the C++ frame.
-        2. Check if 'key' is a list of strings. If so, create a new dictionary containing 
-           just those columns, and return a new DataFrame initialized with that dictionary.
-        """
-        pass
+        if isinstance(key, str):
+            return self._core.get_column(key)
+        elif isinstance(key, list):
+            # Selection of multiple columns
+            new_data = {col: self._core.get_column(col) for col in key}
+            return DataFrame(new_data)
+        raise TypeError(f"Invalid key type: {type(key)}")
 
     def __setitem__(self, key, value):
-        """
-        Overloads df['col_name'] = value
+        if not isinstance(key, str):
+            raise TypeError("Column name must be a string")
         
-        TODO:
-        1. Check if 'key' is a string.
-        2. Convert 'value' into a numpy array.
-        3. Add this array as a new column to the C++ frame.
-        """
-        pass
+        # Ensure data is a 1D numpy array
+        arr = np.ascontiguousarray(value, dtype=np.float64)
+        self._core.add_column(key, arr)
 
     def __repr__(self):
-        """
-        Provide a pandas-like string representation.
-        
-        TODO:
-        1. Get the shape and columns of the dataframe.
-        2. Create a formatted string that shows the shape, the column headers,
-           and the first few rows of data (similar to how pandas prints).
-        3. Return the formatted string.
-        """
-        return "DataFrame skeleton"
+        cols = self.columns
+        rows, num_cols = self.shape
+        res = f"FasterFeatureFrame: {rows} rows x {num_cols} columns\n"
+        res += "Columns: [" + ", ".join(cols[:10]) + ("..." if num_cols > 10 else "") + "]"
+        return res

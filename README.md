@@ -165,9 +165,8 @@ pytest tests/benchmarks/
 
 > Preliminary benchmarks show noticeable improvements in compute-heavy operations where native C++ execution reduces Python overhead.
 
-==============================
 RESULTS (1000000 rows, 50 cols)
-==============================
+<br>
 Pandas time:                0.1594s
 FasterFeatureFrames time:    0.0019s
 Speedup:                    85.08x

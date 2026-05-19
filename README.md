@@ -167,11 +167,27 @@ pytest tests/benchmarks/
 
 RESULTS (1000000 rows, 50 cols)
 <br>
-Pandas time:                0.1594s
-FasterFeatureFrames time:    0.0019s
-Speedup:                    85.08x
+Pandas time:                0.1675s
+<br>
+FasterFeatureFrames time:    0.0015s
+<br>
+Speedup:                    111.59x
+<br>
 
----
+Benchmarking operations on 'column_0'...
+<br>
+Sum             | Pandas: 0.001990s | FFF: 0.000680s | Speedup: 2.93x<br>
+Mean            | Pandas: 0.001024s | FFF: 0.000654s | Speedup: 1.57x<br>
+Min             | Pandas: 0.001316s | FFF: 0.000801s | Speedup: 1.64x<br>
+Max             | Pandas: 0.001211s | FFF: 0.000816s | Speedup: 1.48x<br>
+Mul Scalar      | Pandas: 0.003556s | FFF: 0.002607s | Speedup: 1.36x<br>
+Greater Than    | Pandas: 0.000926s | FFF: 0.000853s | Speedup: 1.09x
+<br>
+
+Testing Drop Column on 'column_1'...
+<br>
+Drop Column     | Pandas: 0.001266s | FFF: 0.000006s | Speedup: 197.30x
+
 
 ## Design
 

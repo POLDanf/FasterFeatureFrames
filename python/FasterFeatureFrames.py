@@ -24,6 +24,27 @@ class DataFrame:
     def shape(self):
         return self._core.shape
 
+    def sum(self, column):
+        return self._core.column_sum(column)
+
+    def mean(self, column):
+        return self._core.column_mean(column)
+
+    def min(self, column):
+        return self._core.column_min(column)
+
+    def max(self, column):
+        return self._core.column_max(column)
+
+    def mul_scalar(self, column, scalar):
+        return self._core.column_mul_scalar(column, scalar)
+
+    def gt(self, column, value):
+        return self._core.column_gt(column, value)
+
+    def drop(self, column):
+        self._core.drop_column(column)
+
     def __getitem__(self, key):
         if isinstance(key, str):
             return self._core.get_column(key)

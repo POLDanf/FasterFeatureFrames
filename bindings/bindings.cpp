@@ -15,5 +15,12 @@ PYBIND11_MODULE(_fasterfeatureframes_core, m) {
         .def("get_columns", &FasterFeatureFrames::get_columns)
         .def_property_readonly("columns", &FasterFeatureFrames::get_columns)
         .def("shape", &FasterFeatureFrames::shape)
-        .def_property_readonly("shape", &FasterFeatureFrames::shape);
+        .def_property_readonly("shape", &FasterFeatureFrames::shape)
+        .def("column_sum", &FasterFeatureFrames::column_sum)
+        .def("column_mean", &FasterFeatureFrames::column_mean)
+        .def("column_min", &FasterFeatureFrames::column_min)
+        .def("column_max", &FasterFeatureFrames::column_max)
+        .def("column_mul_scalar", &FasterFeatureFrames::column_mul_scalar)
+        .def("column_gt", &FasterFeatureFrames::column_gt)
+        .def("drop_column", &FasterFeatureFrames::drop_column);
 }
